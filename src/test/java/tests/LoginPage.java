@@ -25,7 +25,7 @@ public class LoginPage {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
 		driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");		
 	}
-	
+	//This is TestNG step
 	@Test
 	public void test_HomePage_Appear_Correct() throws InterruptedException {
 		objLogin = new Login(driver);
