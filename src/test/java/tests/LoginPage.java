@@ -2,36 +2,39 @@ package tests;
 
 import java.time.Duration;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import pages.HomePage;
+import pages.Login;
+
 public class LoginPage {
+	WebDriver driver;
+	Login objLogin;
+	HomePage objHomePage;
+	
+	@BeforeTest
+	public void setup() {
+		System.setProperty("webdriver.chrome.driver","C:\\Software\\drivers\\chromedriver.exe"); 
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+		driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");		
+	}
 	
 	@Test
 	public void test_HomePage_Appear_Correct() throws InterruptedException {
-		System.setProperty("webdriver.chrome.driver","C:\\Software\\drivers\\chromedriver.exe"); 
-		WebDriver driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-		driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
-		Thread.sleep(3000);
-		driver.findElement(By.name("username")).sendKeys("Admin");
-		Thread.sleep(3000);
-		driver.findElement(By.name("password")).clear();
-		Thread.sleep(3000);
-		driver.findElement(By.name("password")).sendKeys("admin123");
-		Thread.sleep(3000);
-		driver.findElement(By.xpath("//form/div[3]/button")).click();
+		objLogin = new Login(driver);
 		
-		String homeText = driver.findElement(By.xpath("//header/div[1]/div[1]/span/h6")).getText();
-		Assert.assertTrue(homeText.contains("Dashboard"));
-		
-		driver.close();
-		
+		objLogin.loginToApplication("Admin", "admin123");
+		//go to next page
+		objHomePage = new HomePage(driver);
+		//Verify home page user name
+		Assert.assertTrue(objHomePage.getHomePageUserName().contains("Dashboard"));
 	}
-	
 
 }
